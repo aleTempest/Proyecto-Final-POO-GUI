@@ -8,6 +8,8 @@ import javafx.scene.layout.VBox;
 import org.ale.gui_futbol.App;
 import org.ale.gui_futbol.SceneName;
 
+import java.util.regex.Pattern;
+
 public abstract class MainTemplate extends VBox {
     protected SceneName name;
     protected App app;
@@ -20,4 +22,19 @@ public abstract class MainTemplate extends VBox {
         this.setSpacing(15);
     }
     abstract boolean areFieldsEmpty();
+
+    protected boolean isValidUsername(String password) {
+        return Pattern.compile(".{6,}").matcher(password).matches();
+    }
+    protected boolean isValidPassword(String password) {
+        return Pattern.compile(".{7,}").matcher(password).matches();
+    }
+
+    protected boolean isValidPhoneNumber(String str) {
+        return Pattern.compile(".{9,}").matcher(str).matches();
+    }
+
+    protected boolean isValidName(String str) {
+        return Pattern.compile("[a-zA-Z]+").matcher(str).matches();
+    }
 }

@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.ale.gui_futbol.Exceptions.FieldsEmptyException;
+import org.ale.gui_futbol.Exceptions.InvalidField;
 import org.ale.gui_futbol.SceneName;
 
 public class RegisterScene extends MainTemplate {
@@ -23,12 +24,27 @@ public class RegisterScene extends MainTemplate {
     private TextField lastName = new TextField();
     private Button saveBtn = new Button("Guardar");
     private Label title = new Label("Registrar");
-    private void handleRegisterEvent(ActionEvent actionEvent) throws FieldsEmptyException {
+    private void handleRegisterEvent(ActionEvent actionEvent) throws FieldsEmptyException,InvalidField {
         if (!areFieldsEmpty()) {
-            var alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("buh?");
-            alert.setContentText("buh?");
-            alert.show();
+            if (!isValidName(firstName.getText()) || !isValidName(lastName.getText())) {
+                throw new InvalidField("Los nombres no deberían contener carácteres especiales");
+            }
+            if (!isValidPassword(passwordTxt.getText())) {
+                throw new InvalidField("Contraseña inválida");
+            }
+            if (!isValidPhoneNumber(phoneNumber.getText())) {
+                throw new InvalidField("Número de teléfono inválido");
+            }
+            if (
+                    isValidUsername(usernameTxt.getText()) && isValidPassword(passwordTxt.getText()) &&
+                    isValidPhoneNumber(phoneNumber.getText()) && isValidName(firstName.getText()) &&
+                            isValidName(lastName.getText())
+            ) {
+                var alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("buh?");
+                alert.setContentText("buh?");
+                alert.show();
+            }
         } else {
             throw new FieldsEmptyException("Todos los campos deben de estar llenos");
         }
@@ -37,7 +53,7 @@ public class RegisterScene extends MainTemplate {
     private EventHandler<ActionEvent> registerEvent = actionEvent -> {
         try {
             handleRegisterEvent(actionEvent);
-        } catch (FieldsEmptyException e) {
+        } catch (Exception e) {
             var alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setContentText(e.getMessage());
