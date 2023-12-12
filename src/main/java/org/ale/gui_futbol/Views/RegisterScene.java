@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.ale.gui_futbol.Exceptions.FieldsEmptyException;
 import org.ale.gui_futbol.Exceptions.InvalidField;
+import org.ale.gui_futbol.Factories.UserFactory;
 import org.ale.gui_futbol.SceneName;
 
 public class RegisterScene extends MainTemplate {
@@ -26,23 +27,28 @@ public class RegisterScene extends MainTemplate {
     private Label title = new Label("Registrar");
     private void handleRegisterEvent(ActionEvent actionEvent) throws FieldsEmptyException,InvalidField {
         if (!areFieldsEmpty()) {
-            if (!isValidName(firstName.getText()) || !isValidName(lastName.getText())) {
+            var firstNameStr = firstName.getText();
+            var lastNameStr = lastName.getText();
+            var phoneNumberStr = phoneNumber.getText();
+            var usernameStr = usernameTxt.getText();
+            var passwordStr = passwordTxt.getText();
+            if (!isValidName(firstNameStr) || !isValidName(lastNameStr)) {
                 throw new InvalidField("Los nombres no deberían contener carácteres especiales");
             }
-            if (!isValidPassword(passwordTxt.getText())) {
+            if (!isValidPassword(passwordStr)) {
                 throw new InvalidField("Contraseña inválida");
             }
-            if (!isValidPhoneNumber(phoneNumber.getText())) {
+            if (!isValidPhoneNumber(phoneNumberStr)) {
                 throw new InvalidField("Número de teléfono inválido");
             }
             if (
-                    isValidUsername(usernameTxt.getText()) && isValidPassword(passwordTxt.getText()) &&
-                    isValidPhoneNumber(phoneNumber.getText()) && isValidName(firstName.getText()) &&
-                            isValidName(lastName.getText())
+                    isValidUsername(usernameStr) && isValidPassword(passwordStr) &&
+                    isValidPhoneNumber(phoneNumberStr) && isValidName(firstNameStr) && isValidName(lastNameStr)
             ) {
+                var user = UserFactory.create(0,firstNameStr,lastNameStr,phoneNumberStr,"",usernameStr,passwordStr);
                 var alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("buh?");
-                alert.setContentText("buh?");
+                alert.setContentText(user.toString());
                 alert.show();
             }
         } else {
